@@ -17,7 +17,17 @@ class NumberConverter(object):
         self.value = unicode(value)
 
     def in_words(self):
-        return NUMBERS.get(self.value)
+        words = []
+        if self.value in NUMBERS:
+            return NUMBERS[self.value]
+        else:
+            digits = [d for d in self.value]
+            for idx, digit_value in enumerate(digits, start=1):
+                digit_value = unicode(
+                    int(digit_value) * pow(10, len(digits)-idx)
+                )
+                words.append(NUMBERS[digit_value])
+        return ' '.join(words)
 
 
 def convert(value):
@@ -53,6 +63,12 @@ def test_18():
 
 def test_20():
     assert 'twenty' == convert(20)
+
+def test_21():
+    assert 'twenty one' == convert(21)
+
+def test_89():
+    assert 'eighty nine' == convert(89)
 
 def test_90():
     assert 'ninety' == convert(90)
