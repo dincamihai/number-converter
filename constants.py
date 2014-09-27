@@ -17,7 +17,6 @@ NUMBERS = {
 for key, value in NUMBERS.items():
     NUMBERS[key+10] = '%steen' % value
     NUMBERS[key*10] = '%sty' % value
-    NUMBERS[key*100] = '%s hundred' % value
 
 
 NUMBERS.update(dict([
@@ -39,8 +38,11 @@ NUMBERS.update(dict([
 ]))
 
 
-for key, value in NUMBERS.items():
-    NUMBERS[key*1000] = '%s thousand' % value
-
-
 NUMBERS[0] = 'zero'
+
+
+MAGNITUDES = {
+    100: 'hundred',
+    1000: 'thousand',
+    1000000: 'million'
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pytest
-from constants import NUMBERS
+from constants import NUMBERS, MAGNITUDES
 
 
 MIN = 0
@@ -15,7 +15,6 @@ class BadInputValueException(Exception):
 
 
 class NumberConverter(object):
-
 
     def __init__(self, value):
         if not MIN <= value <= MAX:
@@ -32,8 +31,13 @@ class NumberConverter(object):
             for idx, digit_value in enumerate(digits, start=1):
                 if digit_value == '0':
                     continue
-                digit_value = int(digit_value) * pow(10, len(digits)-idx)
+                magnitude = pow(10, len(digits)-idx)
+                digit_value = int(digit_value)
+                if magnitude < 100:
+                    digit_value = int(digit_value) * magnitude
                 words.append(NUMBERS[digit_value])
+                if magnitude in MAGNITUDES:
+                    words.append(MAGNITUDES[magnitude])
         return ' '.join(words)
 
 
@@ -68,26 +72,6 @@ def test_2_digits_multiples_of_10(number):
     assert number*10 in NUMBERS
 
 
-@pytest.mark.parametrize('number', xrange(1, 10))
-def test_3_digits_multiples_of_100(number):
-    assert number*100 in NUMBERS
-
-
-@pytest.mark.parametrize('number', xrange(1, 10))
-def test_4_digits_multiples_of_100(number):
-    assert number*1000 in NUMBERS
-
-
-@pytest.mark.parametrize('number', xrange(1, 10))
-def test_5_digits_multiples_of_100(number):
-    assert number*10000 in NUMBERS
-
-
-@pytest.mark.parametrize('number', xrange(1, 10))
-def test_6_digits_multiples_of_100(number):
-    assert number*100000 in NUMBERS
-
-
 def test_3():
     assert 'three' == convert(3)
 
@@ -118,6 +102,10 @@ def test_1001():
 
 def test_1355():
     assert 'three hundred fifty five' == convert(355)
+
+
+def test_1000():
+    assert 'one thousand' == convert(1000)
 
 
 def test_9999():
