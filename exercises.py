@@ -4,6 +4,9 @@ import pytest
 from constants import NUMBERS, MAGNITUDES, MAX
 
 
+GROUP_SIZE = 3
+
+
 class BadInputValueException(Exception):
     """ raised when value is not in the allowed interval """
 
@@ -45,7 +48,7 @@ class ThreeDigitsNumber(object):
 
 
 def convert(value):
-    GROUP_SIZE = 3
+
     if not type(value) == type(int()):
         return BadInputValueException.message
     if not value <= MAX:
