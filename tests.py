@@ -1,10 +1,10 @@
 import pytest
 import errors
-from convert import Digit, Number
+from convert import Digit, DigitsGroup, Number
 from constants import NUMBERS, MAGNITUDES, MAX
 
 
-class TestNumberConverter(object):
+class TestConvertNumber(object):
 
     def test_negative_1(self):
         output = Number(-1).in_words()
@@ -94,3 +94,30 @@ class TestConvertDigit(object):
     def test_convert_digit_with_position(self):
         digit = Digit(1, position=1)
         assert digit.in_words() == 'ten'
+
+    def test_convert_digit_with_position(self):
+        digit = Digit(1, position=2)
+        assert digit.in_words() == 'one hundred'
+
+
+class TestConvertDigitsGroup(object):
+
+    def test_convert_group_with_no_digits(self):
+        group = DigitsGroup([], 0)
+        assert group.in_words() == ''
+
+    def test_convert_group_with_1_digit(self):
+        group = DigitsGroup([1], 0)
+        assert group.in_words() == 'one'
+
+    def test_convert_group_with_2_digits(self):
+        group = DigitsGroup([1, 2])
+        assert group.in_words() == 'twenty one'
+
+    def test_convert_group_with_3_digits(self):
+        group = DigitsGroup([1, 2, 1])
+        assert group.in_words() == 'one hundred twenty one'
+
+    def test_convert_group_with_position(self):
+        group = DigitsGroup([1, 2], 1)
+        assert group.in_words() == 'twenty one thousand'

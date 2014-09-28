@@ -23,11 +23,14 @@ class Digit(object):
 
 class DigitsGroup(object):
 
-    def __init__(self, digits):
+    def __init__(self, digits, position=None):
         self.digits = [Digit(value, idx) for idx, value in enumerate(digits)]
+        self.position = position
 
     def in_words(self):
         words = []
+        if self.digits and self.position:
+            words.append(MAGNITUDES[self.position])
         for digit in self.digits:
             if digit.in_words():
                 words.append(digit.in_words())
@@ -48,26 +51,36 @@ class Number(object):
         if self.negative:
             self.value = -self.value
 
-        self.words = []
+        self.digits = [d for d in reversed(unicode(self.value))]
+
+    @property
+    def break_points(self):
+        return xrange(0, len(self.digits)+1, GROUP_SIZE)
+
+    @property
+    def groups(self):
+        groups = []
+        for idx, break_point in enumerate(self.break_points):
+            group = DigitsGroup(
+                self.digits[break_point:break_point+GROUP_SIZE], idx
+            )
+            if group.in_words():
+                groups.append(group)
+        return groups
 
     def in_words(self):
+        words = []
+
         if self.value == 0:
             return 'zero'
 
         if self.value in NUMBERS:
-            self.words.append(NUMBERS[self.value])
+            words.append(NUMBERS[self.value])
         else:
-            digits = [d for d in reversed(unicode(self.value))]
-            break_points = xrange(0, len(digits)+1, GROUP_SIZE)
-
-            for idx, break_point in enumerate(break_points, start=1):
-                group = digits[break_point:break_point+GROUP_SIZE]
-                if group:
-                    self.words.append(DigitsGroup(group).in_words())
-                    if digits[break_point+GROUP_SIZE:]:
-                        self.words.append(MAGNITUDES[idx])
+            for idx, group in enumerate(self.groups):
+                words.append(group.in_words())
 
         if self.negative:
-            self.words.append('negative')
+            words.append('negative')
 
-        return ' '.join(reversed(self.words)).strip()
+        return ' '.join(reversed(words)).strip()
