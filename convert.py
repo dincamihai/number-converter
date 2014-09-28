@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import errors
 from constants import NUMBERS, MAGNITUDES, GROUP_SIZE, MAX
 
@@ -84,3 +85,17 @@ class Number(object):
             words.append('negative')
 
         return ' '.join(reversed(words)).strip()
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Convert number to words')
+    parser.add_argument('number', metavar='N', type=int, help='an integer')
+
+    options = parser.parse_args()
+
+    result = Number(options.number).in_words()
+    print(result.encode('utf-8'))
+
+
+if __name__ == '__main__':
+    main()
