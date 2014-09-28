@@ -1,5 +1,8 @@
 import pytest
-from convert import convert, BadInputValueException, ValueTooBigException
+from convert import (
+    convert, BadInputValueException, ValueTooBigException,
+    Digit
+)
 from constants import NUMBERS, MAGNITUDES, MAX
 
 
@@ -77,3 +80,18 @@ class TestNumberConverter(object):
     @pytest.mark.parametrize('number', [MAX+1])
     def test_bigger_than_max(self, number):
         assert convert(number) == ValueTooBigException.message
+
+
+class TestConvertDigit(object):
+
+    def test_convert_digit(self):
+        digit = Digit(1)
+        assert digit.in_words() == 'one'
+
+    def test_convert_zero_digit(self):
+        digit = Digit(0)
+        assert digit.in_words() == 'zero'
+
+    def test_convert_digit_with_position(self):
+        digit = Digit(1, position=1)
+        assert digit.in_words() == 'ten'

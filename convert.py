@@ -18,6 +18,20 @@ class ValueTooBigException(Exception):
     )
 
 
+class Digit(object):
+    """ """
+
+    def __init__(self, value, position=None):
+        self.value = int(value)
+        self.multiplier =  pow(10, position or 0)
+
+
+    def in_words(self):
+        if self.value == 0:
+            return 'zero'
+        return NUMBERS[self.value * self.multiplier]
+
+
 class ThreeDigitsGroup(object):
 
     def __init__(self, value):
@@ -29,15 +43,15 @@ class ThreeDigitsGroup(object):
         if self.value in NUMBERS:
             return NUMBERS[self.value]
         else:
-            for idx, digit in enumerate(self.digits, start=1):
-                if digit == '0':
+            for idx, value in enumerate(self.digits, start=1):
+                if value == '0':
                     continue
                 no_of_zeros = len(self.digits)-idx
                 multiplier = pow(10, no_of_zeros % 3)
-                digit = int(digit)
-                if multiplier == 10:
-                    digit = int(digit) * multiplier
-                words.append(NUMBERS[digit])
+
+                digit = Digit(value, no_of_zeros % 2)
+
+                words.append(digit.in_words())
                 if multiplier == 100:
                     words.append(MAGNITUDES[0])
         return ' '.join(words)
