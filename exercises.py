@@ -17,7 +17,7 @@ class ValueTooBigException(Exception):
     """ raised when value is not in the allowed interval """
 
     message = (
-        'You need to extend constants.MAGNITUDES or '
+        'You need to extend constants.MAGNITUDES list or '
         'pass-in a value <= %s' % MAX
     )
 
