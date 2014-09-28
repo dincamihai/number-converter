@@ -1,8 +1,6 @@
 import pytest
-from convert import (
-    BadInputValueException, ValueTooBigException,
-    Digit, Number
-)
+import errors
+from convert import Digit, Number
 from constants import NUMBERS, MAGNITUDES, MAX
 
 
@@ -13,8 +11,8 @@ class TestNumberConverter(object):
         assert output == 'negative one'
 
     def test_not_a_number(self):
-        output = Number('not a number').in_words()
-        assert output == BadInputValueException.message
+        with pytest.raises(errors.BadInputValueException):
+            output = Number('not a number').in_words()
 
     def test_0(self):
         assert 'zero' == Number(0).in_words()
@@ -79,7 +77,8 @@ class TestNumberConverter(object):
 
     @pytest.mark.parametrize('number', [MAX+1])
     def test_bigger_than_max(self, number):
-        assert Number(number).in_words() == ValueTooBigException.message
+        with pytest.raises(errors.ValueTooBigException):
+            Number(number).in_words()
 
 
 class TestConvertDigit(object):

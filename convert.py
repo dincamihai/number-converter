@@ -1,21 +1,7 @@
 #!/usr/bin/env python
 
+import errors
 from constants import NUMBERS, MAGNITUDES, GROUP_SIZE, MAX
-
-
-class BadInputValueException(Exception):
-    """ raised when value is not in the allowed interval """
-
-    message = 'value needs to be an integer'
-
-
-class ValueTooBigException(Exception):
-    """ raised when value is not in the allowed interval """
-
-    message = (
-        'You need to extend constants.MAGNITUDES list or '
-        'pass-in a value <= %s' % MAX
-    )
 
 
 class Digit(object):
@@ -59,9 +45,9 @@ class Number(object):
 
     def in_words(self):
         if not type(self.value) == type(int()):
-            return BadInputValueException.message
+            raise errors.BadInputValueException
         if not self.value <= MAX:
-            return ValueTooBigException.message
+            raise errors.ValueTooBigException
 
         output = []
         negative = False
