@@ -1,6 +1,3 @@
-import string
-
-
 NUMBERS = {
     1: 'one',
     2: 'two',
