@@ -23,13 +23,17 @@ class Digit(object):
 
     def __init__(self, value, position=None):
         self.value = int(value)
-        self.multiplier =  pow(10, position or 0)
-
+        self.position = position
+        self.multiplier = pow(10, (position or 0) % 2)
 
     def in_words(self):
+        output = []
         if self.value == 0:
-            return 'zero'
-        return NUMBERS[self.value * self.multiplier]
+            return ''
+        output.append(NUMBERS[self.value * self.multiplier])
+        if self.position == 2:
+            output.append(MAGNITUDES[0])
+        return ' '.join(output)
 
 
 class DigitsGroup(object):
@@ -43,18 +47,10 @@ class DigitsGroup(object):
         if self.value in NUMBERS:
             return NUMBERS[self.value]
         else:
-            for idx, value in enumerate(self.digits, start=1):
-                if value == '0':
-                    continue
-                no_of_zeros = len(self.digits)-idx
-                multiplier = pow(10, no_of_zeros % 3)
-
-                digit = Digit(value, no_of_zeros % 2)
-
+            for idx, value in enumerate(reversed(self.digits)):
+                digit = Digit(value, idx)
                 words.append(digit.in_words())
-                if multiplier == 100:
-                    words.append(MAGNITUDES[0])
-        return ' '.join(words)
+        return ' '.join(reversed(words))
 
 
 def convert(value):

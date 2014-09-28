@@ -90,7 +90,7 @@ class TestConvertDigit(object):
 
     def test_convert_zero_digit(self):
         digit = Digit(0)
-        assert digit.in_words() == 'zero'
+        assert digit.in_words() == ''
 
     def test_convert_digit_with_position(self):
         digit = Digit(1, position=1)
