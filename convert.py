@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-from constants import NUMBERS, MAGNITUDES, MAX
-
-
-GROUP_SIZE = 3
+from constants import NUMBERS, MAGNITUDES, GROUP_SIZE, MAX
 
 
 class BadInputValueException(Exception):

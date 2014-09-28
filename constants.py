@@ -42,3 +42,6 @@ MAGNITUDES = ['hundred', 'thousand', 'million']
 
 
 MAX = pow(10, len(MAGNITUDES) * 3) - 1
+
+
+GROUP_SIZE = 3
