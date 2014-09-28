@@ -32,7 +32,7 @@ class Digit(object):
         return NUMBERS[self.value * self.multiplier]
 
 
-class ThreeDigitsGroup(object):
+class DigitsGroup(object):
 
     def __init__(self, value):
         self.value = value
@@ -83,7 +83,7 @@ def convert(value):
         if group:
             group.reverse()
             group = int(''.join(group))
-            output.append(ThreeDigitsGroup(group).in_words())
+            output.append(DigitsGroup(group).in_words())
             if digits[break_point+GROUP_SIZE:]:
                 output.append(MAGNITUDES[idx])
 
