@@ -28,11 +28,10 @@ class Digit(object):
 
     def in_words(self):
         output = []
-        if self.value == 0:
-            return ''
-        output.append(NUMBERS[self.value * self.multiplier])
-        if self.position == 2:
-            output.append(MAGNITUDES[0])
+        if self.value:
+            output.append(NUMBERS[self.value * self.multiplier])
+            if self.position == 2:
+                output.append(MAGNITUDES[0])
         return ' '.join(output)
 
 
