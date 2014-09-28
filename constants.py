@@ -38,11 +38,8 @@ NUMBERS.update(dict([
 ]))
 
 
-NUMBERS[0] = 'zero'
-
-
 MAGNITUDES = {
     100: 'hundred',
-    1000: 'thousand',
-    1000000: 'million'
+    1: 'thousand',
+    2: 'million',
 }
