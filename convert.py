@@ -52,6 +52,15 @@ class DigitsGroup(object):
         return ' '.join(reversed(words))
 
 
+class Number(object):
+
+    def __init__(self, value):
+        self.value = value
+
+    def in_words(self):
+        return convert(self.value)
+
+
 def convert(value):
 
     if not type(value) == type(int()):
