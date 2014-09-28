@@ -58,41 +58,36 @@ class Number(object):
         self.value = value
 
     def in_words(self):
-        return convert(self.value)
+        if not type(self.value) == type(int()):
+            return BadInputValueException.message
+        if not self.value <= MAX:
+            return ValueTooBigException.message
 
+        output = []
+        negative = False
 
-def convert(value):
+        if self.value == 0:
+            return 'zero'
+        elif self.value < 0:
+            negative = True
+            self.value = -self.value
 
-    if not type(value) == type(int()):
-        return BadInputValueException.message
-    if not value <= MAX:
-        return ValueTooBigException.message
+        digits = [d for d in unicode(self.value)]
+        digits.reverse()
 
-    output = []
-    negative = False
+        break_points = range(0, len(digits)+1, GROUP_SIZE)
 
-    if value == 0:
-        return 'zero'
-    elif value < 0:
-        negative = True
-        value = -value
+        for idx, break_point in enumerate(break_points, start=1):
+            group = digits[break_point:break_point+GROUP_SIZE]
+            if group:
+                group.reverse()
+                group = int(''.join(group))
+                output.append(DigitsGroup(group).in_words())
+                if digits[break_point+GROUP_SIZE:]:
+                    output.append(MAGNITUDES[idx])
 
-    digits = [d for d in unicode(value)]
-    digits.reverse()
+        if negative:
+            output.append('negative')
 
-    break_points = range(0, len(digits)+1, GROUP_SIZE)
-
-    for idx, break_point in enumerate(break_points, start=1):
-        group = digits[break_point:break_point+GROUP_SIZE]
-        if group:
-            group.reverse()
-            group = int(''.join(group))
-            output.append(DigitsGroup(group).in_words())
-            if digits[break_point+GROUP_SIZE:]:
-                output.append(MAGNITUDES[idx])
-
-    if negative:
-        output.append('negative')
-
-    output.reverse()
-    return ' '.join(output).strip()
+        output.reverse()
+        return ' '.join(output).strip()

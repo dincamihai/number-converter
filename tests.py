@@ -1,6 +1,6 @@
 import pytest
 from convert import (
-    convert, BadInputValueException, ValueTooBigException,
+    BadInputValueException, ValueTooBigException,
     Digit, Number
 )
 from constants import NUMBERS, MAGNITUDES, MAX
