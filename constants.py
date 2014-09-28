@@ -38,8 +38,7 @@ NUMBERS.update(dict([
 ]))
 
 
-MAGNITUDES = {
-    100: 'hundred',
-    1: 'thousand',
-    2: 'million',
-}
+MAGNITUDES = ['hundred', 'thousand', 'million']
+
+
+MAX = pow(10, len(MAGNITUDES) * 3) - 1

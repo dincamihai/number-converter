@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 
 import pytest
-from constants import NUMBERS, MAGNITUDES
-
-
-MIN = 0
-MAX = 999999
+from constants import NUMBERS, MAGNITUDES, MAX
 
 
 class BadInputValueException(Exception):
     """ raised when value is not in the allowed interval """
 
-    message = 'value needs to be an integer between %s and %s' % (MIN, MAX)
+    message = 'value needs to be an integer'
+
+
+class ValueTooBigException(Exception):
+    """ raised when value is not in the allowed interval """
+
+    message = (
+        'You need to extend constants.MAGNITUDES or '
+        'pass-in a value <= %s' % MAX
+    )
 
 
 class ThreeDigitsNumber(object):
@@ -35,20 +40,28 @@ class ThreeDigitsNumber(object):
                     digit = int(digit) * multiplier
                 words.append(NUMBERS[digit])
                 if multiplier == 100:
-                    words.append(MAGNITUDES[multiplier])
+                    words.append(MAGNITUDES[0])
         return ' '.join(words)
 
 
 def convert(value):
     GROUP_SIZE = 3
-    if not MIN <= value <= MAX:
+    if not type(value) == type(int()):
         return BadInputValueException.message
+    if not value <= MAX:
+        return ValueTooBigException.message
+
+    output = []
+    negative = False
+
+    if value == 0:
+        return 'zero'
+    elif value < 0:
+        negative = True
+        value = -value
 
     digits = [d for d in unicode(value)]
     digits.reverse()
-    output = []
-    if value == 0:
-        return 'zero'
 
     break_points = range(0, len(digits)+1, GROUP_SIZE)
 
@@ -59,7 +72,10 @@ def convert(value):
             group = int(''.join(group))
             output.append(ThreeDigitsNumber(group).in_words())
             if digits[break_point+GROUP_SIZE:]:
-                output.append(MAGNITUDES.get(idx, ''))
+                output.append(MAGNITUDES[idx])
+
+    if negative:
+        output.append('negative')
 
     output.reverse()
     return ' '.join(output).strip()
@@ -67,7 +83,7 @@ def convert(value):
 
 def test_negative_1():
     output = convert(-1)
-    assert output == BadInputValueException.message
+    assert output == 'negative one'
 
 
 def test_not_a_number():
@@ -75,8 +91,8 @@ def test_not_a_number():
     assert output == BadInputValueException.message
 
 
-def test_MIN():
-    assert 'zero' == convert(MIN)
+def test_0():
+    assert 'zero' == convert(0)
 
 
 @pytest.mark.parametrize('number', xrange(1, 21))
@@ -117,16 +133,16 @@ def test_1001():
     assert 'one thousand one' == convert(1001)
 
 
-def test_1355():
-    assert 'one thousand three hundred fifty five' == convert(1355)
+def test_999():
+    assert 'nine hundred ninety nine' == convert(999)
 
 
 def test_1000():
     assert 'one thousand' == convert(1000)
 
 
-def test_999():
-    assert 'nine hundred ninety nine' == convert(999)
+def test_1355():
+    assert 'one thousand three hundred fifty five' == convert(1355)
 
 
 def test_9999():
@@ -141,5 +157,18 @@ def test_99999():
     assert 'ninety nine thousand nine hundred ninety nine' == convert(99999)
 
 
-def test_MAX():
-    assert 'nine hundred ninety nine thousand nine hundred ninety nine' == convert(MAX)
+@pytest.mark.parametrize('number', [MAX])
+def test_max(number):
+    groups = len(MAGNITUDES) * ['nine hundred ninety nine']
+    output = []
+    for idx, group in enumerate(groups, start=1):
+        output.append(group)
+        if groups[idx:]:
+            output.append(MAGNITUDES[idx])
+    output.reverse()
+    assert ' '.join(output) == convert(number)
+
+
+@pytest.mark.parametrize('number', [MAX+1])
+def test_bigger_than_max(number):
+    assert convert(number) == ValueTooBigException.message
