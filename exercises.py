@@ -22,21 +22,21 @@ class ValueTooBigException(Exception):
     )
 
 
-class ThreeDigitsNumber(object):
+class ThreeDigitsGroup(object):
 
     def __init__(self, value):
         self.value = value
+        self.digits = [d for d in unicode(self.value)]
 
     def in_words(self):
         words = []
         if self.value in NUMBERS:
             return NUMBERS[self.value]
         else:
-            digits = [d for d in unicode(self.value)]
-            for idx, digit in enumerate(digits, start=1):
+            for idx, digit in enumerate(self.digits, start=1):
                 if digit == '0':
                     continue
-                no_of_zeros = len(digits)-idx
+                no_of_zeros = len(self.digits)-idx
                 multiplier = pow(10, no_of_zeros % 3)
                 digit = int(digit)
                 if multiplier == 10:
@@ -73,7 +73,7 @@ def convert(value):
         if group:
             group.reverse()
             group = int(''.join(group))
-            output.append(ThreeDigitsNumber(group).in_words())
+            output.append(ThreeDigitsGroup(group).in_words())
             if digits[break_point+GROUP_SIZE:]:
                 output.append(MAGNITUDES[idx])
 
