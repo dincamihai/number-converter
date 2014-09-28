@@ -1,5 +1,5 @@
 import pytest
-from exercises import convert, BadInputValueException, ValueTooBigException
+from convert import convert, BadInputValueException, ValueTooBigException
 from constants import NUMBERS, MAGNITUDES, MAX
 
 def test_negative_1():
