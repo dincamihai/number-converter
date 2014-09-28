@@ -23,17 +23,13 @@ class Digit(object):
 
 class DigitsGroup(object):
 
-    def __init__(self, value):
-        self.value = value
-        self.digits = [d for d in unicode(self.value)]
+    def __init__(self, digits):
+        self.digits = [Digit(value, idx) for idx, value in enumerate(digits)]
 
     def in_words(self):
         words = []
-        if self.value in NUMBERS:
-            return NUMBERS[self.value]
-        else:
-            for idx, value in enumerate(reversed(self.digits)):
-                digit = Digit(value, idx)
+        for digit in self.digits:
+            if digit.in_words():
                 words.append(digit.in_words())
         return ' '.join(reversed(words))
 
@@ -42,38 +38,36 @@ class Number(object):
 
     def __init__(self, value):
         self.value = value
+        self.negative = value < 0
 
-    def in_words(self):
         if not type(self.value) == type(int()):
             raise errors.BadInputValueException
         if not self.value <= MAX:
             raise errors.ValueTooBigException
 
-        output = []
-        negative = False
-
-        if self.value == 0:
-            return 'zero'
-        elif self.value < 0:
-            negative = True
+        if self.negative:
             self.value = -self.value
 
-        digits = [d for d in unicode(self.value)]
-        digits.reverse()
+        self.words = []
 
-        break_points = range(0, len(digits)+1, GROUP_SIZE)
+    def in_words(self):
+        if self.value == 0:
+            return 'zero'
 
-        for idx, break_point in enumerate(break_points, start=1):
-            group = digits[break_point:break_point+GROUP_SIZE]
-            if group:
-                group.reverse()
-                group = int(''.join(group))
-                output.append(DigitsGroup(group).in_words())
-                if digits[break_point+GROUP_SIZE:]:
-                    output.append(MAGNITUDES[idx])
+        if self.value in NUMBERS:
+            self.words.append(NUMBERS[self.value])
+        else:
+            digits = [d for d in reversed(unicode(self.value))]
+            break_points = xrange(0, len(digits)+1, GROUP_SIZE)
 
-        if negative:
-            output.append('negative')
+            for idx, break_point in enumerate(break_points, start=1):
+                group = digits[break_point:break_point+GROUP_SIZE]
+                if group:
+                    self.words.append(DigitsGroup(group).in_words())
+                    if digits[break_point+GROUP_SIZE:]:
+                        self.words.append(MAGNITUDES[idx])
 
-        output.reverse()
-        return ' '.join(output).strip()
+        if self.negative:
+            self.words.append('negative')
+
+        return ' '.join(reversed(self.words)).strip()
