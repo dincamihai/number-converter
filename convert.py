@@ -95,8 +95,11 @@ def main():
 
     options = parser.parse_args()
 
-    result = Number(options.number).in_words()
-    print(result.encode('utf-8'))
+    try:
+        result = Number(options.number).in_words()
+        print(result.encode('utf-8'))
+    except errors.ValueTooBigException as exc:
+        print (exc.message)
 
 
 if __name__ == '__main__':
