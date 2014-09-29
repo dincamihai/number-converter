@@ -103,21 +103,25 @@ class TestConvertDigit(object):
 class TestConvertDigitsGroup(object):
 
     def test_convert_group_with_no_digits(self):
-        group = DigitsGroup([], 0)
+        group = DigitsGroup('000', 0)
         assert group.in_words() == ''
 
     def test_convert_group_with_1_digit(self):
-        group = DigitsGroup([1], 0)
+        group = DigitsGroup('100', 0)
         assert group.in_words() == 'one'
 
     def test_convert_group_with_2_digits(self):
-        group = DigitsGroup([1, 2])
+        group = DigitsGroup('120')
         assert group.in_words() == 'twenty one'
 
+    def test_convert_group_111(self):
+        group = DigitsGroup('111')
+        assert group.in_words() == 'one hundred eleven'
+
     def test_convert_group_with_3_digits(self):
-        group = DigitsGroup([1, 2, 1])
-        assert group.in_words() == 'one hundred twenty one'
+        group = DigitsGroup('123')
+        assert group.in_words() == 'three hundred twenty one'
 
     def test_convert_group_with_position(self):
-        group = DigitsGroup([1, 2], 1)
+        group = DigitsGroup('120', 1)
         assert group.in_words() == 'twenty one thousand'

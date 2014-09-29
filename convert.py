@@ -25,17 +25,21 @@ class Digit(object):
 class DigitsGroup(object):
 
     def __init__(self, digits, position=None):
-        self.digits = [Digit(value, idx) for idx, value in enumerate(digits)]
+        self.digits = []
+        digits = digits[::-1].zfill(3)
+        self.digits.append(Digit(int(digits[0]), 2))
+        if digits[1] == '1':
+            self.digits.append(Digit(int(digits[1:])))
+        else:
+            self.digits.append(Digit(int(digits[1]), 1))
+            self.digits.append(Digit(int(digits[2])))
         self.position = position
 
     def in_words(self):
-        words = []
+        words = [d.in_words() for d in self.digits if d.value]
         if self.digits and self.position:
             words.append(MAGNITUDES[self.position])
-        for digit in self.digits:
-            if digit.in_words():
-                words.append(digit.in_words())
-        return ' '.join(reversed(words))
+        return ' '.join(words)
 
 
 class Number(object):
@@ -52,7 +56,7 @@ class Number(object):
         if self.negative:
             self.value = -self.value
 
-        self.digits = [d for d in reversed(unicode(self.value))]
+        self.digits = unicode(self.value)[::-1]
 
     @property
     def break_points(self):
@@ -62,11 +66,9 @@ class Number(object):
     def groups(self):
         groups = []
         for idx, break_point in enumerate(self.break_points):
-            group = DigitsGroup(
-                self.digits[break_point:break_point+GROUP_SIZE], idx
-            )
-            if group.in_words():
-                groups.append(group)
+            digits = self.digits[break_point:break_point+GROUP_SIZE]
+            if digits:
+                groups.append(DigitsGroup(digits, idx))
         return groups
 
     def in_words(self):
