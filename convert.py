@@ -72,16 +72,10 @@ class Number(object):
         return groups
 
     def in_words(self):
-        words = []
-
         if self.value == 0:
             return 'zero'
 
-        if self.value in NUMBERS:
-            words.append(NUMBERS[self.value])
-        else:
-            for idx, group in enumerate(self.groups):
-                words.append(group.in_words())
+        words = [g.in_words() for g in self.groups]
 
         if self.negative:
             words.append('negative')
