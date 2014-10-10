@@ -24,9 +24,13 @@ class Digit(object):
 
 class DigitsGroup(object):
 
+    is_null = False
+
     def __init__(self, digits, position=None):
         self.digits = []
         digits = digits[::-1].zfill(3)
+        if digits == '000':
+            self.is_null = True
         self.digits.append(Digit(int(digits[0]), 2))
         if digits[1] == '1':
             self.digits.append(Digit(int(digits[1:])))
@@ -37,7 +41,7 @@ class DigitsGroup(object):
 
     def in_words(self):
         words = [d.in_words() for d in self.digits if d.value]
-        if self.digits and self.position:
+        if self.digits and not self.is_null and self.position:
             words.append(MAGNITUDES[self.position])
         return ' '.join(words)
 
@@ -75,7 +79,7 @@ class Number(object):
         if self.value == 0:
             return 'zero'
 
-        words = [g.in_words() for g in self.groups]
+        words = [g.in_words() for g in self.groups if not g.is_null]
 
         if self.negative:
             words.append('negative')

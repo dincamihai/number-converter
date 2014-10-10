@@ -63,6 +63,11 @@ class TestConvertNumber(object):
 
     def test_99999(self):
         assert 'ninety nine thousand nine hundred ninety nine' == Number(99999).in_words()
+    def test_99999(self):
+        assert 'ninety nine thousand nine hundred ninety nine' == Number(99999).in_words()
+
+    def test_1000001(self):
+        assert 'one million one' == Number(1000001).in_words()
 
     @pytest.mark.parametrize('number', [MAX])
     def test_max(self, number):
